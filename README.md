@@ -1,5 +1,5 @@
-# pern-todo-app
+# Railway Reservation System
 
-<img src="https://www.freecodecamp.org/news/content/images/size/w2000/2020/03/PERN.png" />
+Created by Rohit Tuli and Praful Gupta as our CS301 Databases course project. 
 
-https://www.youtube.com/watch?v=ldYcgPKEZC8
+
