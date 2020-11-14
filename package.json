@@ -8,15 +8,25 @@
     "npm": "6.14.2"
   },
   "scripts": {
-    "start":"node index.js",
+    "start": "node index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Rohit Tuli",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "pg": "^7.18.2"
+    "jsonwebtoken": "^8.5.1",
+    "make-runnable": "^1.3.8",
+    "moment": "^2.29.1",
+    "mysql2": "^2.2.5",
+    "pg": "^7.18.2",
+    "sequelize": "^6.3.5",
+    "uuid": "^8.3.1",
+    "uuidv4": "^6.2.5"
   }
 }
