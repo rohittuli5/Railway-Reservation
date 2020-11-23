@@ -3,6 +3,15 @@ const { uuid } = require('uuidv4');
 const db = require('../db');
 const Helper = require('./Helper');
 
+
+const acBerthCount = 18;
+const slBerthCount = 24;
+
+
+
+
+
+
 const Admin = {
   /**
    * Add a Train
@@ -25,8 +34,25 @@ const Admin = {
       moment(new Date())
     ];
 
+    const createStatusQuery = `INSERT INTO
+    train_status(train_id, ac_seat_count_left, sl_seat_count_left,created_date,modified_date)
+    VALUES($1, $2, $3, $4, $5)
+    returning *`;
+    const statusValues = [
+      values[0],
+      req.body.ac_coach_count * acBerthCount,
+      req.body.sl_coach_count * slBerthCount,
+      moment(new Date()),
+      moment(new Date())
+    ];
+
+
+
     try {
         const { rows } = await db.query(createQuery, values);
+
+        await db.query(createStatusQuery, statusValues);
+
         return res.status(201).send(rows[0]);
       } catch(error) {
         return res.status(400).send(error);
