@@ -9,7 +9,9 @@ const dotenv = require('dotenv');
 
 
 const  UserWithDb = require('./src/controllers/User.js');
+const  AdminWithDb = require('./src/controllers/Admin.js');
 const  Auth = require('./src/middleware/Auth.js');
+const  dbOperations = require("./src/dbscripts.js");
 
 dotenv.config();
 
@@ -19,6 +21,15 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+
+////////////////////////////////////////////////
+
+// dbOperations.createUserTable();
+// dbOperations.createTrainsTable();
+
+
+////////////////////////////////////////////////
 
 //middleware
 app.use(cors());
@@ -39,7 +50,8 @@ app.get("/", (req, res) => {
 
 app.post('/api/v1/users/login',UserWithDb.login);  // email , password
 app.post('/api/v1/users/create', UserWithDb.create);  // email , password
-
+app.post('/api/v1/admin/create_train', Auth.verifyToken, AdminWithDb.createTrain);
+app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
 
 
 

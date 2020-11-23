@@ -50,6 +50,29 @@ const createUserTable = () => {
   }
 
 
+  const createTrainsTable = () => {
+    const queryText =
+      `CREATE TABLE IF NOT EXISTS
+        trains(
+          id UUID PRIMARY KEY,
+          train_name VARCHAR(128) UNIQUE NOT NULL,
+          ac_coach_count INT NOT NULL,
+          sl_coach_count INT NOT NULL,
+          schedule_date TIMESTAMP,
+        )`;
+  
+    pool.query(queryText)
+      .then((res) => {
+        console.log(res);
+        pool.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        pool.end();
+      });
+  }
+
+
   const dropUserTable = () => {
     const queryText = 'DROP TABLE IF EXISTS users returning *';
     pool.query(queryText)

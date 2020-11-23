@@ -1,5 +1,6 @@
 
-DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS trains;
 
 CREATE TABLE IF NOT EXISTS
       users(
@@ -12,9 +13,17 @@ CREATE TABLE IF NOT EXISTS
 		
       );
 	  
-DROP TABLE IF EXISTS hello;
-Create table hello(id VARCHAR(128));
-insert into hello(id) values('hello');
-insert into hello(id) values('hello1');
-insert into hello(id) values('hello2');
-SELECT * from hello;
+	  
+	  
+CREATE TABLE IF NOT EXISTS
+        trains(
+          id UUID PRIMARY KEY,
+          train_name VARCHAR(128) UNIQUE NOT NULL,
+          ac_coach_count INT NOT NULL,
+          sl_coach_count INT NOT NULL,
+          schedule_date TIMESTAMP,
+		  create_date TIMESTAMP
+        );
+	  
+
+
