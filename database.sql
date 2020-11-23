@@ -1,7 +1,7 @@
 
 -- DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS trains;
-
+-- DROP TABLE IF EXISTS booking_agents;
 CREATE TABLE IF NOT EXISTS
       users(
         id UUID PRIMARY KEY,
@@ -24,6 +24,17 @@ CREATE TABLE IF NOT EXISTS
           schedule_date TIMESTAMP,
 		  create_date TIMESTAMP
         );
-	  
+		
+CREATE TABLE IF NOT EXISTS
+        booking_agents(
+          id UUID PRIMARY KEY,
+          credit_card VARCHAR(128) NOT NULL,
+          address VARCHAR(128) NOT NULL,
+		  created_date TIMESTAMP,
+		  FOREIGN KEY (id) REFERENCES users(id)
+        );
+		
 
-
+ 
+-- SELECT * FROM booking_agents;
+-- Select * from users;

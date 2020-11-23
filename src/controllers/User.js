@@ -11,7 +11,7 @@ const User = {
    * @returns {object} reflection object 
    */
   async create(req, res) {
-    if (!req.body.email || !req.body.password) {
+    if (!req.body.email || !req.body.password || !req.body.credit_card || !req.body.address ) {
       return res.status(400).send({'message': 'Some values are missing'});
     }
     if (!Helper.isValidEmail(req.body.email)) {
@@ -19,22 +19,38 @@ const User = {
     }
     const hashPassword = Helper.hashPassword(req.body.password);
 
-    const createQuery = `INSERT INTO
+    const createQueryUser = `INSERT INTO
       users(id, email, password,user_type,created_date, modified_date)
       VALUES($1, $2, $3, $4, $5, $6)
       returning *`;
+
+    const createQueryAgent = `INSERT INTO
+      booking_agents(id, credit_card, address, created_date)
+      VALUES($1, $2, $3, $4)
+      returning *`;
+
     const values = [
       uuid(),
       req.body.email,
       hashPassword,
-      "consumer",
+      "agent",
       moment(new Date()),
       moment(new Date())
     ];
 
+    const agentValues = [
+      values[0],
+      req.body.credit_card,
+      req.body.address,
+      moment(new Date())
+    ];
+
     try {
-      const { rows } = await db.query(createQuery, values);
+      const { rows } = await db.query(createQueryUser, values);
       const token = Helper.generateToken(rows[0].id);
+
+      await db.query(createQueryAgent, agentValues);
+
       return res.status(201).send({ token });
     } catch(error) {
       if (error.routine === '_bt_check_unique') {
@@ -50,6 +66,7 @@ const User = {
    * @returns {object} user object 
    */
   async login(req, res) {
+
     if (!req.body.email || !req.body.password) {
       return res.status(400).send({'message': 'Some values are missing'});
     }
