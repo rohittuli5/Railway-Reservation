@@ -1,61 +1,45 @@
 import React, { Fragment, useState } from "react";
+import './bootstrap.min.css';
 import "./App.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 //components
+import Login from "./components/login";
+import SignUp from "./components/signup";
 
-import InputTodo from "./components/InputTodo";
-import ListTodos from "./components/ListTodos";
-const axios = require('axios')
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  function validateForm() {
-    return email.length > 0 && password.length > 0;
-  }
+function App() {
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(email,password);
+  return (<Router>
+    <div className="App">
+    <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+        <div className="container">
+          <Link className="navbar-brand" to={"/sign-in"}>Railway Reservation Project</Link>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link className="nav-link" to={"/sign-in"}>Login</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/sign-up"}>Sign up</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div className="auth-wrapper">
+        <div className="auth-inner">
+          <Switch>
+            <Route exact path='/' component={Login} />
+            <Route path="/sign-in" component={Login} />
+            <Route path="/sign-up" component={SignUp} />
+          </Switch>
+        </div>
+      </div>
     
-
-    axios.post('https://railway-reservation-project.herokuapp.com/api/v1/users/login', {
-      email: email,
-      password: password
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(err =>{
-      console.log(err);
-    })
-  }
-
-  return (
-    <div className="Login">
-      <Form onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            autoFocus
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group size="lg" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()}>
-          Login
-        </Button>
-      </Form>
     </div>
+    </Router>
   );
 }
+export default App;
