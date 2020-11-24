@@ -20,36 +20,35 @@ export default function Trains(){
       
 
       const [trains, updateTrainArray]=useState([]);
-      var temp=[];
-      var len=0;
 
-      React.useEffect(function effectFunction() {
+      const getTickets = () => {
 
-
-        async function abcd(){
-       axios.get('https://railway-reservation-project.herokuapp.com/api/v1/get_all_train?', config)
-      .then(function (response) {
+      axios.get('https://railway-reservation-project.herokuapp.com/api/v1/get_all_train?', config)
+      .then( (response) => {
         console.log(response)
-        len=response.data.rowCount;
         
-        for(var i=0;i<len;i++){
+        updateTrainArray((old_train)=>{
+          var curr_train = [...old_train];
+          for(var i=0;i<response.data.rowCount;i++){
             var obj=new Object();
             obj.train_name= response.data.rows[i].train_name;
             obj.schedule_date= response.data.rows[i].schedule_date;
             obj.ac_coach_count= response.data.rows[i].ac_coach_count;
             obj.sl_coach_count=response.data.rows[i].sl_coach_count;
-            //console.log(obj);
-            
-            temp.push(obj);
-            updateTrainArray([...trains,obj]);
-        }
-        //console.log(trains);
+            curr_train = [...curr_train,obj]
+           }
+           return curr_train;
+
+        });
       })
       .catch(err =>{
         console.log(err);
       })
-    }
-    abcd();
+
+      }
+
+      React.useEffect(()=>{
+        getTickets();
     },[]);
     
     return(
