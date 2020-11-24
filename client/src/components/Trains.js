@@ -1,25 +1,47 @@
+import { Button } from "bootstrap";
 import  { Component, Fragment,useState } from "react";
+import BootstrapTable from 'react-bootstrap-table-next'
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var ReactBsTable  = require('react-bootstrap-table');
-var BootstrapTable = ReactBsTable.BootstrapTable;
-var TableHeaderColumn = ReactBsTable.TableHeaderColumn;
+
 const axios = require('axios')
 const qs = require('querystring')
 
   
 
 export default function Trains(){
+  const [inputList, setInputList] = useState([{ name: "", age: "",gender:"" }]);
+  const[noOfPassengers,setNoOfPassengers]=useState(0);
+  const[coach_type,handleCoachChange]=useState("");
+  const[train_id,setTrainId]=useState("");
+  const [trains, updateTrainArray]=useState([]);
     const config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
         }
       }
-      
+      const cols = [{
+        dataField: 'train_name',
+        text: 'Train Name'
+      }, {
+        dataField: 'schedule_date',
+        text: 'Date and Time'
+      }, {
+        dataField: 'ac_coach_count',
+        text: 'AC Coaches'
+      },{
+        dataField: 'sl_coach_count',
+        text: 'Sleeper Coaches'
+      },
+      {
+        dataField: 'train_id',
+        text: 'Train ID'
+      }
+    ];
 
-      const [trains, updateTrainArray]=useState([]);
+      
 
       const getTickets = () => {
 
@@ -35,6 +57,7 @@ export default function Trains(){
             obj.schedule_date= response.data.rows[i].schedule_date;
             obj.ac_coach_count= response.data.rows[i].ac_coach_count;
             obj.sl_coach_count=response.data.rows[i].sl_coach_count;
+            obj.train_id=response.data.rows[i].id;
             curr_train = [...curr_train,obj]
            }
            return curr_train;
@@ -51,15 +74,121 @@ export default function Trains(){
         getTickets();
     },[]);
     
+    function handleSubmit(row) {
+      const requestBody = {
+        train_id: row.train_id,
+        number_of_passengers: noOfPassengers,
+        coach_type: coach_type,
+        passenger: inputList
+      }
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-access-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
+        }
+      }
+      axios.post('https://railway-reservation-project.herokuapp.com/api/v1/users/create_ticket', qs.stringify(requestBody), config)
+      .then(function (response) {
+        
+          console.log(response);
+          if(response.status==400){
+            console.log("Server Error");
+          }
+      
+      })
+      .catch(err =>{
+        console.log(err);
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
+      })
+    }
+    const selectRow = {
+      mode: 'checkbox',
+      clickToSelect: true,
+      clickToExpand: true
+    };
+    const handleInputChange = (e, index) => {
+      const { name, value } = e.target;
+      const list = [...inputList];
+      list[index][name] = value;
+      setInputList(list);
+    };
+
+    const handleAddClick = () => {
+      setInputList([...inputList, { name: "", age: "", gender: "" }]);
+      setNoOfPassengers(noOfPassengers+1);
+    };
+    const handleRemoveClick = index => {
+      const list = [...inputList];
+      list.splice(index, 1);
+      setInputList(list);
+      setNoOfPassengers(noOfPassengers+1);
+    };
+    function validateForm(){
+      return true;
+    }
+
+    const expandRow = {
+      showExpandColumn: true,
+      renderer: row => (
+        <div className="App">
+      <h3>Book Ticket for train ${row.train_name}</h3>
+      <input
+      name="coach"
+      placeholder="Select Coach- ac/sl"
+      value={coach_type}
+      onChange={e=>handleCoachChange(e.target.value)}/>
+
+      {inputList.map((x, i) => {
+        return (
+          <div className="box">
+          
+            <input
+              name="name"
+              placeholder="Enter Name of Passenger"
+              value={x.name}
+              onChange={e => handleInputChange(e, i)}
+            />
+            <input
+              className="ml10"
+              name="age"
+              placeholder="Enter Passenger Age"
+              value={x.age}
+              onChange={e => handleInputChange(e, i)}
+            />
+            <input
+              className="ml10"
+              name="gender"
+              placeholder="Enter M for Male, F for Female"
+              value={x.gender}
+              onChange={e => handleInputChange(e, i)}
+            />
+            <div className="btn-box">
+              {inputList.length !== 1 && <button
+                className="mr10"
+                onClick={() => handleRemoveClick(i)}>Remove Passenger</button>}
+              {inputList.length - 1 === i && <button onClick={handleAddClick}>Add Passenger</button>}
+            </div>
+          </div>
+        );
+      })}
+      <button  onClick={row=>handleSubmit(row)} className="btn btn-primary btn-block">
+      Book Ticket
+      </button>
+    </div>
+      )
+    };
+
     return(
         <div>
         
-        <BootstrapTable data={trains} striped hover>
-      <TableHeaderColumn isKey dataField='train_name'>Train Name</TableHeaderColumn>
-      <TableHeaderColumn dataField='schedule_date'>Date</TableHeaderColumn>
-      <TableHeaderColumn dataField='ac_coach_count'>AC Coach Count</TableHeaderColumn>
-      <TableHeaderColumn dataField='sl_coach_count'>Sleeper Coach Count</TableHeaderColumn>
-      <TableHeaderColumn>Book Ticket</TableHeaderColumn>
+        <BootstrapTable keyField='train_name' data={trains} columns={cols} selectRow={ selectRow }
+        expandRow={ expandRow } >
+      
+
   </BootstrapTable>
   </div>
     );
