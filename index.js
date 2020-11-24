@@ -63,6 +63,10 @@ app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
 app.get('/api/v1/users/get_all_my_tickets', Auth.verifyToken, Ticket.getAllTickets);
 app.post('/api/v1/users/create_ticket', Auth.verifyToken, Ticket.createTicket);
 
+app.get('/api/v1/users/get_all_passenger_by_ticket', Auth.verifyToken, Ticket.getAllPassengerByTicket);
+app.get('/api/v1/users/get_all_passenger_by_train', Auth.verifyToken, Ticket.getAllPassengerByTrain);
+
+
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
     res.sendFile(path.join(__dirname,"client/build/index.html"));
