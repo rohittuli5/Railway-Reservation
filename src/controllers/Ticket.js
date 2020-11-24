@@ -41,10 +41,11 @@ const Ticket = {
         
         const train_status = rows[0];
         var availableSeats = 0;
-        var ticketStatus = "Failed";
         var ticketValue = {};
+        var updateCoach = 'sl';
 
         if(coachType == 'ac'){
+            updateCoach = 'ac';
             availableSeats = train_status.ac_seat_count_left;
         }else{
             availableSeats = train_status.sl_seat_count_left;
@@ -94,8 +95,12 @@ const Ticket = {
           const passengersListINSERTED = await db.query(final_passenger_query);
           console.log(passengersListINSERTED.rows);
 
-            // update seats 
-            // and add passenger
+          const updateTrainStatusQuery = `UPDATE train_status SET `+updateCoach+`_seat_count_left = $1 WHERE train_id = $2 returning *;`;
+
+          const trainStatusUpdated = await db.query(updateTrainStatusQuery, [
+            availableSeats - numberOfPassengers,
+            trainId
+          ]);
 
         }else{
 

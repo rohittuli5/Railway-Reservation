@@ -72,8 +72,11 @@ CREATE TABLE IF NOT EXISTS
           modified_date TIMESTAMP,
 		  FOREIGN KEY (train_id) REFERENCES trains(id) ON DELETE CASCADE
         );
--- SELECT * FROM train_status;
+		
+SELECT * FROM train_status;
 -- SELECT * FROM booking_agents;
 -- Select * from users;
-Select * from tickets;
+-- Select * from tickets;
 -- Select * from trains;
+
+-- UPDATE train_status SET ac_seat_count_left = 110 WHERE train_id = 'be21fe48-3e90-4512-824c-66bed8e08e34' returning *;
