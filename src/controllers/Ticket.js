@@ -126,7 +126,7 @@ const Ticket = {
   },
 
   async getAllTickets(req, res) {
-    const findAllQuery = 'SELECT * FROM tickets where id = $1';
+    const findAllQuery = 'SELECT * FROM tickets where booked_by = $1';
     try {
       const { rows, rowCount } = await db.query(findAllQuery, [req.user.id]);
       return res.status(200).send({ rows, rowCount });
