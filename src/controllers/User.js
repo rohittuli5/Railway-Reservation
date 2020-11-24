@@ -84,7 +84,8 @@ const User = {
       }
       const token = Helper.generateToken(rows[0].id);
       const user_type = rows[0].user_type;
-      return res.status(200).send({ token , user_type});
+      const id = rows[0].id;
+      return res.status(200).send({ token , user_type , id});
     } catch(error) {
       return res.status(400).send(error)
     }

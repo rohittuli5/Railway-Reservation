@@ -2,8 +2,10 @@
 -- DROP TABLE IF EXISTS users;
 -- DROP TABLE IF EXISTS trains;
 -- DROP TABLE IF EXISTS booking_agents;
--- DROP TABLE IF EXISTS tickets;
+
 -- DROP TABLE IF EXISTS passengers;
+-- DROP TABLE IF EXISTS tickets;
+
 CREATE TABLE IF NOT EXISTS
       users(
         id UUID PRIMARY KEY,
@@ -12,7 +14,6 @@ CREATE TABLE IF NOT EXISTS
 		user_type VARCHAR(128) NOT NULL,
         created_date TIMESTAMP,
         modified_date TIMESTAMP
-		
       );
 	  
 	  
@@ -42,6 +43,8 @@ CREATE TABLE IF NOT EXISTS
           number_of_passengers INT NOT NULL,
           booked_by UUID,
 		  train_id UUID,
+		  status VARCHAR(128) NOT NULL,
+		  created_date TIMESTAMP,
 		  FOREIGN KEY (train_id) REFERENCES trains(id),
 		  FOREIGN KEY (booked_by) REFERENCES booking_agents(id)
         );
@@ -67,8 +70,10 @@ CREATE TABLE IF NOT EXISTS
 		  sl_seat_count_left INT NOT NULL,
           created_date TIMESTAMP,
           modified_date TIMESTAMP,
-		  FOREIGN KEY (train_id) REFERENCES trains(id)
+		  FOREIGN KEY (train_id) REFERENCES trains(id) ON DELETE CASCADE
         );
 -- SELECT * FROM train_status;
 -- SELECT * FROM booking_agents;
 -- Select * from users;
+-- Select * from tickets;
+-- Select * from trains;

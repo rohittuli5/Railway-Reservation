@@ -39,7 +39,9 @@ const Helper = {
       process.env.SECRET, { expiresIn: '7d' }
     );
     return token;
-  }
+  },
+
+
 }
 
 module.exports = Helper;

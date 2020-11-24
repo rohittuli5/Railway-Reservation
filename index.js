@@ -10,7 +10,14 @@ const dotenv = require('dotenv');
 
 const  UserWithDb = require('./src/controllers/User.js');
 const  AdminWithDb = require('./src/controllers/Admin.js');
+const  Ticket = require('./src/controllers/Ticket.js');
+
+
 const  Auth = require('./src/middleware/Auth.js');
+
+
+
+
 const  dbOperations = require("./src/dbscripts.js");
 
 dotenv.config();
@@ -50,10 +57,11 @@ app.get("/", (req, res) => {
 
 app.post('/api/v1/users/login',UserWithDb.login);  // email , password
 app.post('/api/v1/users/create', UserWithDb.create);  // email , password
-app.post('/api/v1/admin/create_train', Auth.verifyToken, AdminWithDb.createTrain);
+app.post('/api/v1/admin/create_train', Auth.verifyToken, AdminWithDb.createTrain); // different middleware for admins
 app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
 
-
+app.get('/api/v1/users/get_all_my_tickets', Auth.verifyToken, Ticket.getAllTickets);
+app.get('/api/v1/users/create_ticket', Auth.verifyToken, Ticket.createTicket);
 
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
