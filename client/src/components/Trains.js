@@ -1,5 +1,7 @@
+import  { Component, Fragment,useState } from "react";
 var React = require('react');
 var ReactDOM = require('react-dom');
+
 var ReactBsTable  = require('react-bootstrap-table');
 var BootstrapTable = ReactBsTable.BootstrapTable;
 var TableHeaderColumn = ReactBsTable.TableHeaderColumn;
@@ -16,13 +18,12 @@ export default function Trains(){
         }
       }
     
-      var trains = [
-    
-    ];
+      const [trains, updateTrainArray]=useState([]);
       axios.get('https://railway-reservation-project.herokuapp.com/api/v1/get_all_train?', config)
       .then(function (response) {
         //console.log(response)
         let len=response.data.rowCount;
+        var temp=[];
         for(var i=0;i<len;i++){
             var obj=new Object();
             obj.train_name=response.data.rows[i].train_name;
@@ -30,7 +31,9 @@ export default function Trains(){
             obj.ac_coach_count=response.data.rows[i].ac_coach_count;
             obj.sl_coach_count=response.data.rows[i].sl_coach_count;
             //console.log(obj);
-            trains.push(obj);
+            
+            
+            updateTrainArray([...trains,obj]);
         }
         //console.log(trains);
       })
@@ -46,6 +49,7 @@ export default function Trains(){
       <TableHeaderColumn dataField='schedule_date'>Date</TableHeaderColumn>
       <TableHeaderColumn dataField='ac_coach_count'>AC Coach Count</TableHeaderColumn>
       <TableHeaderColumn dataField='sl_coach_count'>Sleeper Coach Count</TableHeaderColumn>
+      <TableHeaderColumn>Book Ticket</TableHeaderColumn>
   </BootstrapTable>
     );
 }
