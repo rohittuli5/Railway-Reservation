@@ -2,6 +2,8 @@ const moment = require('moment');
 const { uuid } = require('uuidv4');
 const db = require('../db');
 const Helper = require('./Helper');
+const format = require('pg-format');
+
 
 const Ticket = {
   /**
@@ -16,6 +18,9 @@ const Ticket = {
     const trainId = req.body.train_id;
     const numberOfPassengers = req.body.number_of_passengers;
     const coachType = req.body.coach_type;
+    const passenger = req.body.passenger;
+
+    console.log(req.body)
 
 
     if (!myId || !trainId || !numberOfPassengers || !coachType) {
@@ -37,42 +42,78 @@ const Ticket = {
         const train_status = rows[0];
         var availableSeats = 0;
         var ticketStatus = "Failed";
-
-        console.log(train_status);
+        var ticketValue = {};
 
         if(coachType == 'ac'){
             availableSeats = train_status.ac_seat_count_left;
         }else{
             availableSeats = train_status.sl_seat_count_left;
         }
-        if(availableSeats >= numberOfPassengers){
-            // update seats and add passenger
-            ticketStatus = "Success"
-        }else{
 
-        }
 
         const createTicketQuery = `INSERT INTO
           tickets(id, number_of_passengers, booked_by,train_id,status,created_date)
           VALUES($1, $2, $3, $4, $5, $6)
           returning *`;
+
+
+        if(availableSeats >= numberOfPassengers){
+          
         const createTicketValues = [
             uuid(),
             numberOfPassengers,
             myId,
             trainId,
-            ticketStatus,
+            "Success",
             moment(new Date())
           ];
 
-        console.log("sucess ",createTicketValues);
+          ticketValue = await db.query(createTicketQuery, createTicketValues);
 
-        const ticketValue = await db.query(createTicketQuery, createTicketValues);
-        console.log(ticketValue);
+
+          const createPassengersQuery = `INSERT INTO
+          passengers(id, ticket_id, train_id,passenger_name,age,gender,seat_number,coach_number)
+          VALUES %L
+          returning *`;
+
+          var passengersArray = [];
+          passenger.forEach(function(item) {
+            passengersArray.push([
+              uuid(),
+              createTicketValues[0],
+              createTicketValues[3],
+              item.name,
+              parseInt(item.age,10),
+              item.gender,
+              10,
+              10
+            ]);
+          });
+
+          const final_passenger_query = format(createPassengersQuery,passengersArray);
+          const passengersListINSERTED = await db.query(final_passenger_query);
+          console.log(passengersListINSERTED.rows);
+
+            // update seats 
+            // and add passenger
+
+        }else{
+
+          const createTicketValues = [
+            uuid(),
+            numberOfPassengers,
+            myId,
+            trainId,
+            "Failed",
+            moment(new Date())
+          ];
+
+          ticketValue = await db.query(createTicketQuery, createTicketValues);
+
+        }
 
         return res.status(201).send(ticketValue.rows[0]);
       } catch(error) {
-        console.log("err ",error)
         return res.status(400).send(error);
       }
   },

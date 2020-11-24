@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS
           number_of_passengers INT NOT NULL,
           booked_by UUID,
 		  train_id UUID,
-		  status VARCHAR(128) NOT NULL,
+		  status VARCHAR(5) NOT NULL,
 		  created_date TIMESTAMP,
 		  FOREIGN KEY (train_id) REFERENCES trains(id),
 		  FOREIGN KEY (booked_by) REFERENCES booking_agents(id)
@@ -75,5 +75,5 @@ CREATE TABLE IF NOT EXISTS
 -- SELECT * FROM train_status;
 -- SELECT * FROM booking_agents;
 -- Select * from users;
--- Select * from tickets;
+Select * from tickets;
 -- Select * from trains;
