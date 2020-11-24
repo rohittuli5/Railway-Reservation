@@ -73,7 +73,7 @@ const Ticket = {
 
 
           const createPassengersQuery = `INSERT INTO
-          passengers(id, ticket_id, train_id,passenger_name,age,gender,seat_number,coach_number)
+          passengers(id, ticket_id, train_id,passenger_name,age,gender,seat_number,coach_number,coach_type)
           VALUES %L
           returning *`;
 
@@ -87,7 +87,8 @@ const Ticket = {
               parseInt(item.age,10),
               item.gender,
               10,
-              10
+              10,
+              updateCoach
             ]);
           });
 
@@ -132,6 +133,29 @@ const Ticket = {
       return res.status(400).send(error);
     }
   },
+
+  async getAllPassengerByTicket(req, res) {
+    const findAllQuery = 'SELECT * FROM passengers where ticket_id = $1';
+    console.log(req.body.ticket_id);
+    try {
+      const { rows, rowCount } = await db.query(findAllQuery, [req.body.ticket_id]);
+      return res.status(200).send({ rows, rowCount });
+    } catch(error) {
+      return res.status(400).send(error);
+    }
+  },
+
+  async getAllPassengerByTrain(req, res) {
+    const findAllQuery = 'SELECT * FROM passengers where train_id = $1';
+    try {
+      const { rows, rowCount } = await db.query(findAllQuery, [req.body.train_id]);
+      return res.status(200).send({ rows, rowCount });
+    } catch(error) {
+      return res.status(400).send(error);
+    }
+  },
+
+  
 
 
 }

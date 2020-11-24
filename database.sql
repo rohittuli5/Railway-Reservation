@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS
 		  gender VARCHAR(1) NOT NULL,
 		  seat_number INT NOT NULL,
 		  coach_number INT NOT NULL,
+		  coach_type VARCHAR(5) NOT NULL,
 		  FOREIGN KEY (ticket_id) REFERENCES tickets(id),
 		  FOREIGN KEY (train_id) REFERENCES trains(id)
         );
@@ -73,10 +74,11 @@ CREATE TABLE IF NOT EXISTS
 		  FOREIGN KEY (train_id) REFERENCES trains(id) ON DELETE CASCADE
         );
 		
-SELECT * FROM train_status;
+-- SELECT * FROM train_status;
 -- SELECT * FROM booking_agents;
 -- Select * from users;
 -- Select * from tickets;
 -- Select * from trains;
+-- Select * from passengers;
 
 -- UPDATE train_status SET ac_seat_count_left = 110 WHERE train_id = 'be21fe48-3e90-4512-824c-66bed8e08e34' returning *;
