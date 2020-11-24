@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "./components/login";
 import SignUp from "./components/signup";
 import Trains from "./components/Trains"
-
+import AddTrain from "./components/AddTrain"
 function App() {
 
   return (<Router>
@@ -25,7 +25,10 @@ function App() {
                 <Link className="nav-link" to={"/sign-up"}>Sign up</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={"/trains"}>Trains</Link>
+                <Link className="nav-link" to={"/trains"}>Book Journey</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/add-train"}>Add Trains</Link>
               </li>
             </ul>
           </div>
@@ -38,6 +41,7 @@ function App() {
             <Route path="/sign-in" component={Login} />
             <Route path="/sign-up" component={SignUp} />
             <Route path="/trains" component={Trains} />
+            <Route path="/add-train" component={AddTrain}/>
           </Switch>
         </div>
       </div>
