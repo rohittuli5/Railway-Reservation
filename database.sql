@@ -80,5 +80,3 @@ CREATE TABLE IF NOT EXISTS
 -- Select * from tickets;
 -- Select * from trains;
 -- Select * from passengers;
-
--- UPDATE train_status SET ac_seat_count_left = 110 WHERE train_id = 'be21fe48-3e90-4512-824c-66bed8e08e34' returning *;

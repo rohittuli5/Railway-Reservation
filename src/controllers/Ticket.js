@@ -96,10 +96,11 @@ const Ticket = {
           const passengersListINSERTED = await db.query(final_passenger_query);
           console.log(passengersListINSERTED.rows);
 
-          const updateTrainStatusQuery = `UPDATE train_status SET `+updateCoach+`_seat_count_left = $1 WHERE train_id = $2 returning *;`;
+          const updateTrainStatusQuery = `UPDATE train_status SET `+updateCoach+`_seat_count_left = $1, modified_date = $2 WHERE train_id = $3 returning *;`;
 
           const trainStatusUpdated = await db.query(updateTrainStatusQuery, [
             availableSeats - numberOfPassengers,
+            moment(new Date()),
             trainId
           ]);
 
