@@ -74,20 +74,23 @@ export default function Trains(){
         getTickets();
     },[]);
     
-    function handleSubmit(row) {
+    const handleSubmit = (row) => {
       const requestBody = {
         train_id: row.train_id,
         number_of_passengers: noOfPassengers,
         coach_type: coach_type,
-        passenger: inputList
+        passenger: [...inputList]
       }
+
+      console.log(requestBody);
       const config = {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
           'x-access-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
         }
       }
-      axios.post('https://railway-reservation-project.herokuapp.com/api/v1/users/create_ticket', qs.stringify(requestBody), config)
+
+      console.log(qs.stringify(requestBody))
+      axios.post('http://localhost:5000/api/v1/users/create_ticket', requestBody, config)
       .then(function (response) {
         
           console.log(response);
