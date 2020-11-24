@@ -9,6 +9,7 @@ import Login from "./components/login";
 import SignUp from "./components/signup";
 import Trains from "./components/Trains"
 import AddTrain from "./components/AddTrain"
+import Tickets from "./components/Tickets"
 function App() {
 
   return (<Router>
@@ -30,6 +31,9 @@ function App() {
               <li className="nav-item">
                 <Link className="nav-link" to={"/add-train"}>Add Trains</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/bookings"}>Check Bookings</Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -42,6 +46,7 @@ function App() {
             <Route path="/sign-up" component={SignUp} />
             <Route path="/trains" component={Trains} />
             <Route path="/add-train" component={AddTrain}/>
+            <Route path="/bookings" component={Tickets}/>
           </Switch>
         </div>
       </div>
