@@ -61,7 +61,7 @@ app.post('/api/v1/admin/create_train', Auth.verifyToken, AdminWithDb.createTrain
 app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
 
 app.get('/api/v1/users/get_all_my_tickets', Auth.verifyToken, Ticket.getAllTickets);
-app.get('/api/v1/users/create_ticket', Auth.verifyToken, Ticket.createTicket);
+app.post('/api/v1/users/create_ticket', Auth.verifyToken, Ticket.createTicket);
 
 app.get("*",(req,res)=>{
   if(process.env.NODE_ENV==="production"){
