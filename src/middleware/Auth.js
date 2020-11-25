@@ -10,6 +10,8 @@ const Auth = {
    * @returns {object|void} response object 
    */
   async verifyToken(req, res, next) {
+    console.log(req.body)
+    console.log(req.headers)
     const token = req.headers['x-access-token'];
     console.log("Verifying Token");
     if(!token) {

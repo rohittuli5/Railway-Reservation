@@ -136,10 +136,11 @@ const Ticket = {
   },
 
   async getAllPassengerByTicket(req, res) {
+    console.log(req.body)
     const findAllQuery = 'SELECT * FROM passengers where ticket_id = $1';
     console.log(req.body.ticket_id);
     try {
-      const { rows, rowCount } = await db.query(findAllQuery, [req.body.ticket_id]);
+      const { rows, rowCount } = await db.query(findAllQuery, [req.headers['ticket_id']]);
       return res.status(200).send({ rows, rowCount });
     } catch(error) {
       return res.status(400).send(error);
@@ -149,7 +150,7 @@ const Ticket = {
   async getAllPassengerByTrain(req, res) {
     const findAllQuery = 'SELECT * FROM passengers where train_id = $1';
     try {
-      const { rows, rowCount } = await db.query(findAllQuery, [req.body.train_id]);
+      const { rows, rowCount } = await db.query(findAllQuery, [req.headers['train_id']]);
       return res.status(200).send({ rows, rowCount });
     } catch(error) {
       return res.status(400).send(error);

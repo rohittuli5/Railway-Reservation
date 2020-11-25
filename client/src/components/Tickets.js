@@ -75,44 +75,7 @@ export default function Trains(){
           getTickets();
       },[]);
       
-      const getPassengers = (ticket_id) => {
-        const config = {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
-          }
-        }
-        const requestBody = {
-          ticket_id: String(ticket_id)
-        }
-        axios.get('https://railway-reservation-project.herokuapp.com/api/v1/users/get_all_passengers_by_ticket',qs.stringify(requestBody), config)
-        .then( (response) => {
-          console.log(response)
-          
-          updatePassengerArray((old_passengers_list)=>{
-            var curr_passengers_list = [...old_passengers_list];
-            for(var i=0;i<response.data.rowCount;i++){
-              var obj=new Object();
-              obj.train_id= response.data.rows[i].train_id;
-              obj.ticket_id= response.data.rows[i].ticket_id;
-              obj.passenger_id= response.data.rows[i].id;
-              obj.passenger_name= response.data.rows[i].passenger_name;
-              obj.age= response.data.rows[i].age;
-              obj.gender=response.data.rows[i].gender;
-              obj.seat_no=response.data.rows[i].seat_no;
-              obj.coach_no=response.data.rows[i].coach_no;
-              obj.coach_type=response.data.rows[i].coach_type;
-              curr_passengers_list = [...curr_passengers_list,obj]
-             }
-             return curr_passengers_list;
-  
-          });
-        })
-        .catch(err =>{
-          console.log(err);
-        })
-  
-        } 
+      
         
       function validateForm(){
         return true;
@@ -143,13 +106,15 @@ export default function Trains(){
       const expandRow = {
         showExpandColumn: true,
         
-        renderer: row => (
+        renderer:  (row) => {
+          //getPassengers(row.ticket_id);
+          return (
           <div className="App">
-          <p>Hello</p>
+          <TrainsDetails ticket_id ={row.ticket_id}/>
           
           </div>
-        )
-        
+         )
+        },
         
       };
   
@@ -157,10 +122,67 @@ export default function Trains(){
           <div>
           
           <BootstrapTable keyField='ticket_id' data={tickets} columns={cols} 
-          expandRow={ expandRow } >
+          expandRow={ expandRow } options={{onExpand :(row)=>{}}}>
         
   
     </BootstrapTable>
+    </div>
+      );
+  }
+
+
+   const  TrainsDetails = (props) => {
+  
+    const [passengers, updatePassengerArray]=useState([]);
+  
+      const getPassengers = (ticket_id) => {
+
+        axios(
+          {
+            method : 'get',
+            url : 'http://localhost:5000/api/v1/users/get_all_passenger_by_ticket',
+            headers: {
+              'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c',
+              'ticket_id' : ticket_id
+            },
+          }
+      )
+        .then( (response) => {
+          console.log(response)
+          
+          updatePassengerArray((old_passengers_list)=>{
+            var curr_passengers_list = [...old_passengers_list];
+            for(var i=0;i<response.data.rowCount;i++){
+              var obj=new Object();
+              obj.train_id= response.data.rows[i].train_id;
+              obj.ticket_id= response.data.rows[i].ticket_id;
+              obj.passenger_id= response.data.rows[i].id;
+              obj.passenger_name= response.data.rows[i].passenger_name;
+              obj.age= response.data.rows[i].age;
+              obj.gender=response.data.rows[i].gender;
+              obj.seat_no=response.data.rows[i].seat_no;
+              obj.coach_no=response.data.rows[i].coach_no;
+              obj.coach_type=response.data.rows[i].coach_type;
+              curr_passengers_list = [...curr_passengers_list,obj]
+             }
+             return curr_passengers_list;
+  
+          });
+        })
+        .catch(err =>{
+          console.log(err);
+        })
+  
+        } 
+
+        React.useEffect(()=>{
+          getPassengers(props.ticket_id);
+      },[]);
+  
+      return(
+          <div>
+          
+      <p>{passengers}</p>
     </div>
       );
   }
