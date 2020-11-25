@@ -4,6 +4,10 @@ const db = require('../db');
 const Helper = require('./Helper');
 const format = require('pg-format');
 
+const acBerthCount = 18;
+const slBerthCount = 24;
+
+
 
 const Ticket = {
   /**
@@ -43,11 +47,14 @@ const Ticket = {
         var availableSeats = 0;
         var ticketValue = {};
         var updateCoach = 'sl';
+        var coachTotalCount = 0;
 
         if(coachType == 'ac'){
             updateCoach = 'ac';
+            coachTotalCount = acBerthCount;
             availableSeats = train_status.ac_seat_count_left;
         }else{
+            coachTotalCount = slBerthCount;
             availableSeats = train_status.sl_seat_count_left;
         }
 
@@ -78,7 +85,9 @@ const Ticket = {
           returning *`;
 
           var passengersArray = [];
+          var currPass = 0;
           passenger.forEach(function(item) {
+            const seatAlloted = ((availableSeats-currPass)%coachTotalCount);
             passengersArray.push([
               uuid(),
               createTicketValues[0],
@@ -86,10 +95,11 @@ const Ticket = {
               item.name,
               parseInt(item.age,10),
               item.gender,
-              10,
-              10,
+              seatAlloted == 0 ? coachTotalCount : seatAlloted,
+              Math.floor((availableSeats-currPass)/coachTotalCount),
               updateCoach
             ]);
+            currPass = currPass + 1;
           });
 
           const final_passenger_query = format(createPassengersQuery,passengersArray);
