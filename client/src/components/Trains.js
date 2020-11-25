@@ -4,6 +4,14 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogLabel,
+  AlertDialogDescription,
+  AlertDialogOverlay,
+  AlertDialogContent,
+} from "@reach/alert-dialog";
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -25,10 +33,14 @@ export default function Trains(){
     }
     console.log(token);
   const [inputList, setInputList] = useState([{ name: "", age: "",gender:"" }]);
-  const[noOfPassengers,setNoOfPassengers]=useState(0);
+  const[noOfPassengers,setNoOfPassengers]=useState(1);
   const[coach_type,handleCoachChange]=useState("");
   const[train_id,setTrainId]=useState("");
   const [trains, updateTrainArray]=useState([]);
+  const [showDialog, setShowDialog] = useState(false);
+  const close = () => setShowDialog(false);
+  const cancelRef = React.useRef();
+
     const config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -51,6 +63,14 @@ export default function Trains(){
       {
         dataField: 'train_id',
         text: 'Train ID'
+      },
+      {
+        dataField: 'ac_seat_count_left',
+        text: 'AC Seats Remaining'
+      },
+      {
+        dataField: 'sl_seat_count_left',
+        text: 'Sleeper Seats Remaining'
       }
     ];
 
@@ -71,6 +91,8 @@ export default function Trains(){
             obj.ac_coach_count= response.data.rows[i].ac_coach_count;
             obj.sl_coach_count=response.data.rows[i].sl_coach_count;
             obj.train_id=response.data.rows[i].id;
+            obj.ac_seat_count_left=response.data.rows[i].ac_seat_count_left;
+            obj.sl_seat_count_left=response.data.rows[i].sl_seat_count_left;
             curr_train = [...curr_train,obj]
            }
            return curr_train;
@@ -108,7 +130,9 @@ export default function Trains(){
           if(response.status==400){
             console.log("Server Error");
           }
-      
+          else {
+            alert("Your ticket has been booked, check it in the booking section");
+          }
       })
       .catch(err =>{
         console.log(err);
@@ -139,30 +163,52 @@ export default function Trains(){
       const list = [...inputList];
       list.splice(index, 1);
       setInputList(list);
-      setNoOfPassengers(noOfPassengers+1);
+      setNoOfPassengers(noOfPassengers-1);
     };
+    function isNumeric(str) {
+      if (typeof str != "string") return false   
+      return !isNaN(str) && 
+             !isNaN(parseFloat(str)) 
+    }
     function validateForm(){
+      const list = [...inputList];
+      for(var i=0;i<list.length;i++){
+        if(!isNumeric(list[i]['age'])){
+          return false;
+        }
+        if(!(/^[a-zA-Z]+$/.test(list[i]['name']))){
+          return false;
+        }
+        if(list[i]['gender']=="" || coach_type==""){
+          return false;
+        }
+      }
       return true;
     }
     function handlePageSwitch(){
       history.push('/bookings',{params:token});
     }
+    function handleLogout(){
+      token="";
+      history.push('/sign-in');
+    }
     const expandRow = {
       showExpandColumn: true,
       renderer: row => (
-        <div className="App">
-      <h3>Book Ticket for train ${row.train_name}</h3>
-      <input
-      name="coach"
-      placeholder="Select Coach- ac/sl"
-      value={coach_type}
-      onChange={e=>handleCoachChange(e.target.value)}/>
+        <div className="Booking">
+      <h3>Book Ticket for train {row.train_name}</h3>
+      <select name="coach" id="coach" onChange={e=>handleCoachChange(e)}>
+      <option value="ac">Select Coach</option>      
+      <option value="ac">AC Coach</option>
+      <option value="sl">Sleeper Coach</option>
+          </select>
 
       {inputList.map((x, i) => {
         return (
-          <div className="box">
+          <div className="book">
           
             <input
+              
               name="name"
               placeholder="Enter Name of Passenger"
               value={x.name}
@@ -175,23 +221,21 @@ export default function Trains(){
               value={x.age}
               onChange={e => handleInputChange(e, i)}
             />
-            <input
-              className="ml10"
-              name="gender"
-              placeholder="Enter M for Male, F for Female"
-              value={x.gender}
-              onChange={e => handleInputChange(e, i)}
-            />
+            <select name="gender" id="gender" onChange={e=>handleInputChange(e,i)}>
+            <option value="m">Select Gender</option>
+            <option value="m">Male</option>
+            <option value="f">Female</option>
+          </select>
             <div className="btn-box">
-              {inputList.length !== 1 && <button
-                className="mr10"
-                onClick={() => handleRemoveClick(i)}>Remove Passenger</button>}
-              {inputList.length - 1 === i && <button onClick={handleAddClick}>Add Passenger</button>}
+              {inputList.length !== 1 && <Button
+                className="mr10 btn"
+                onClick={() => handleRemoveClick(i)}>Remove Passenger</Button>}
+              {inputList.length - 1 === i && <Button onClick={handleAddClick} className="btn ">Add Passenger</Button>}
             </div>
           </div>
         );
       })}
-      <button  onClick={() => handleSubmit(row)} className="btn btn-primary btn-block">
+      <button  disabled={!validateForm()} onClick={() => handleSubmit(row)} className="btn btn-primary btn-block">
       Book Ticket
       </button>
     </div>
@@ -208,12 +252,16 @@ export default function Trains(){
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Button onClick={handlePageSwitch} className="btn btn-block">Check Bookings</Button>
+                
               </li>
-            
+              <li>
+              <Button onClick={handleLogout} className="btn btn-block">Logout</Button>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
+      
         <BootstrapTable keyField='train_name' data={trains} columns={cols} selectRow={ selectRow }
         expandRow={ expandRow } >
       

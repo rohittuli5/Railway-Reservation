@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import DateTimePicker from 'react-datetime-picker';
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 const axios = require('axios')
 const qs = require('querystring')
 const moment=require('moment')
@@ -28,7 +29,13 @@ export default function AddTrains(){
     function checkPermission(){
         return true;
     }
-
+    function handleLogout(){
+      token="";
+      history.push('/sign-in');
+    }
+    function handlePageSwitch(){
+      history.push('/passenger-list',{params:token});
+    }
     function handleSubmit(event) {
         event.preventDefault();
         const requestBody = {
@@ -49,6 +56,10 @@ export default function AddTrains(){
             console.log(response);
             if(response.status==400){
               console.log("Server Error");
+              alert("An Error Occoured");
+            }
+            else{
+              alert("Train Successfully Added");
             }
         
         })
@@ -62,6 +73,22 @@ export default function AddTrains(){
         })
       }
     return (
+      <div>
+      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+        <div className="container">
+          <Link className="navbar-brand" to={"/sign-in"}>Railway Reservation Project</Link>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul className="navbar-nav ml-auto">
+            <li>
+            <Button onClick={handlePageSwitch} className="btn btn-block">Check Passenger List</Button>
+            </li>
+              <li>
+              <Button onClick={handleLogout} className="btn btn-block">Logout</Button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
         <Form onSubmit={handleSubmit}>
             <h3>Add Train</h3>
         <Form.Group size="lg" controlId="train-name">
@@ -99,6 +126,7 @@ export default function AddTrains(){
         Add Train
         </Button>
         </Form>
+        </div>
     );
 
     

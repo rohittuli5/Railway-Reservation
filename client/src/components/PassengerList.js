@@ -11,7 +11,7 @@ var ReactDOM = require('react-dom');
 const axios = require('axios')
 const qs = require('querystring')
 var token="";
-export default function Tickets(){
+export default function PassengerList(){
   const location = useLocation();
   const history = useHistory();
   if(!location.state){
@@ -35,33 +35,36 @@ export default function Tickets(){
           }
         }
         const cols = [{
-          dataField: 'train_id',
-          text: 'Train ID'
-        }, {
-          dataField: 'number_of_passengers',
-          text: 'No. of Passengers'
-        }, {
-          dataField: 'status',
-          text: 'Booking Status'
-        },{
-          dataField: 'schedule_date',
-          text: 'Journey Date'
-        },
-        {
-          dataField: 'booking_date',
-          text: 'Booking Date'
-        },
-        {
-            dataField: 'ticket_id',
-            text: 'Ticket ID'
+            dataField: 'train_name',
+            text: 'Train Name'
+          }, {
+            dataField: 'schedule_date',
+            text: 'Date and Time'
+          }, {
+            dataField: 'ac_coach_count',
+            text: 'AC Coaches'
+          },{
+            dataField: 'sl_coach_count',
+            text: 'Sleeper Coaches'
+          },
+          {
+            dataField: 'train_id',
+            text: 'Train ID'
+          },
+          {
+            dataField: 'ac_seat_count_left',
+            text: 'AC Seats Remaining'
+          },
+          {
+            dataField: 'sl_seat_count_left',
+            text: 'Sleeper Seats Remaining'
           }
-      ];
-  
-        
+        ];
+    
   
         const getTickets = () => {
   
-        axios.get('https://railway-reservation-project.herokuapp.com/api/v1/users/get_all_my_tickets', config)
+        axios.get('https://railway-reservation-project.herokuapp.com/api/v1/get_all_train', config)
         .then( (response) => {
           console.log(response)
           
@@ -69,12 +72,13 @@ export default function Tickets(){
             var curr_ticket = [...old_ticket];
             for(var i=0;i<response.data.rowCount;i++){
               var obj=new Object();
-              obj.train_id= response.data.rows[i].train_id;
-              obj.booking_date= response.data.rows[i].created_date;
-              obj.number_of_passengers= response.data.rows[i].number_of_passengers;
-              obj.status=response.data.rows[i].status;
-              obj.ticket_id=response.data.rows[i].id;
-              obj.schedule_date=response.data.rows[i].schedule_date;
+              obj.train_name= response.data.rows[i].train_name;
+            obj.schedule_date= response.data.rows[i].schedule_date;
+            obj.ac_coach_count= response.data.rows[i].ac_coach_count;
+            obj.sl_coach_count=response.data.rows[i].sl_coach_count;
+            obj.train_id=response.data.rows[i].id;
+            obj.ac_seat_count_left=response.data.rows[i].ac_seat_count_left;
+            obj.sl_seat_count_left=response.data.rows[i].sl_seat_count_left;
               curr_ticket = [...curr_ticket,obj]
              }
              return curr_ticket;
@@ -98,7 +102,7 @@ export default function Tickets(){
       }
      
     function handlePageSwitch(){
-      history.push('/trains',{params:token});
+      history.push('/add-train',{params:token});
     }
 
       const expandRow = {
@@ -124,7 +128,7 @@ export default function Tickets(){
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Button onClick={handlePageSwitch} className="btn btn-block">Book Ticket</Button>
+                <Button onClick={handlePageSwitch} className="btn btn-block">Add Trains</Button>
               </li>
               <li>
               <Button onClick={handleLogout} className="btn btn-block">Logout</Button>
@@ -175,7 +179,7 @@ export default function Tickets(){
         axios(
           {
             method : 'get',
-            url : 'https://railway-reservation-project.herokuapp.com/api/v1/users/get_all_passenger_by_ticket',
+            url : 'https://railway-reservation-project.herokuapp.com/api/v1/users/get_all_passenger_by_train',
             headers: {
               'x-access-token': token,
               'ticket_id' : ticket_id

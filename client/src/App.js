@@ -10,6 +10,7 @@ import SignUp from "./components/signup";
 import Trains from "./components/Trains"
 import AddTrain from "./components/AddTrain"
 import Tickets from "./components/Tickets"
+import PassengerList from "./components/PassengerList"
 function App() {
 
   return (<Router>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/trains" component={Trains} />
             <Route path="/add-train" component={AddTrain}/>
             <Route path="/bookings" component={Tickets}/>
+            <Route path="/passenger-list" component={PassengerList}/>
           </Switch>
         </div>
       </div>
