@@ -112,7 +112,7 @@ export default function PassengerList(){
           //getPassengers(row.ticket_id);
           return (
           <div className="App">
-          <TrainsDetails ticket_id ={row.ticket_id}/>
+          <TrainsDetails train_id ={row.train_id}/>
           
           </div>
          )
@@ -137,7 +137,7 @@ export default function PassengerList(){
           </div>
         </div>
       </nav>
-          <BootstrapTable keyField='ticket_id' data={tickets} columns={cols} 
+          <BootstrapTable keyField='train_id' data={tickets} columns={cols} 
           expandRow={ expandRow } options={{onExpand :(row)=>{}}}>
         
   
@@ -174,7 +174,7 @@ export default function PassengerList(){
       }
   ];
   
-      const getPassengers = (ticket_id) => {
+      const getPassengers = (train_id) => {
 
         axios(
           {
@@ -182,7 +182,7 @@ export default function PassengerList(){
             url : 'https://railway-reservation-project.herokuapp.com/api/v1/users/get_all_passenger_by_train',
             headers: {
               'x-access-token': token,
-              'ticket_id' : ticket_id
+              'train_id' : train_id
             },
           }
       )
@@ -215,7 +215,7 @@ export default function PassengerList(){
         } 
 
         React.useEffect(()=>{
-          getPassengers(props.ticket_id);
+          getPassengers(props.train_id);
       },[]);
   
       return(

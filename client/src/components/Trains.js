@@ -176,7 +176,7 @@ export default function Trains(){
         if(!isNumeric(list[i]['age'])){
           return false;
         }
-        if(!(/^[a-zA-Z]+$/.test(list[i]['name']))){
+        if(!(/^[a-zA-Z ]+$/.test(list[i]['name']))){
           return false;
         }
         if(list[i]['gender']=="" || coach_type==""){

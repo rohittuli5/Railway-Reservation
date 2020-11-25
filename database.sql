@@ -1,10 +1,17 @@
-
--- DROP TABLE IF EXISTS users;
--- DROP TABLE IF EXISTS trains;
--- DROP TABLE IF EXISTS booking_agents;
-
+-- DROP TABLE IF EXISTS train_status;
 -- DROP TABLE IF EXISTS passengers;
 -- DROP TABLE IF EXISTS tickets;
+-- DROP TABLE IF EXISTS trains;
+-- DROP TABLE IF EXISTS booking_agents;
+-- DELETE FROM users where user_type <> 'admin';
+
+
+-- DROP TABLE IF EXISTS users;
+
+
+
+
+
 
 CREATE TABLE IF NOT EXISTS
       users(
@@ -76,7 +83,7 @@ CREATE TABLE IF NOT EXISTS
 		
 -- SELECT * FROM train_status;
 -- SELECT * FROM booking_agents;
--- Select * from users;
+Select * from users;
 -- Select * from tickets;
 -- Select * from trains;
 -- Select * from passengers;
