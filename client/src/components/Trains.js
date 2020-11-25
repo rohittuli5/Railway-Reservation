@@ -101,9 +101,7 @@ export default function Trains(){
           'x-access-token':token
         }
       }
-
-      console.log(qs.stringify(requestBody))
-      axios.post('http://localhost:5000/api/v1/users/create_ticket', requestBody, config)
+      axios.post('https://railway-reservation-project.herokuapp.com/api/v1/users/create_ticket', requestBody, config)
       .then(function (response) {
         
           console.log(response);
@@ -193,7 +191,7 @@ export default function Trains(){
           </div>
         );
       })}
-      <button  onClick={row=>handleSubmit(row)} className="btn btn-primary btn-block">
+      <button  onClick={() => handleSubmit(row)} className="btn btn-primary btn-block">
       Book Ticket
       </button>
     </div>
