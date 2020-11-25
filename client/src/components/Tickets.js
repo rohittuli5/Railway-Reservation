@@ -92,28 +92,7 @@ export default function Trains(){
       function validateForm(){
         return true;
       }
-      const passenger_cols = [{
-        dataField: 'passenger_name',
-        text: 'Name of Passenger'
-      }, {
-        dataField: 'age',
-        text: 'Age'
-      }, {
-        dataField: 'gender',
-        text: 'Gender'
-      },{
-        dataField: 'seat_no',
-        text: 'Seat No'
-      },
-      {
-        dataField: 'coach_no',
-        text: 'Coach No'
-      },
-      {
-          dataField: 'coach_type',
-          text: 'Coach Type'
-        }
-    ];
+     
     function handlePageSwitch(){
       history.push('/trains',{params:token});
     }
@@ -161,6 +140,29 @@ export default function Trains(){
    const  TrainsDetails = (props) => {
   
     const [passengers, updatePassengerArray]=useState([]);
+
+    const passenger_cols = [{
+      dataField: 'passenger_name',
+      text: 'Name of Passenger'
+    }, {
+      dataField: 'age',
+      text: 'Age'
+    }, {
+      dataField: 'gender',
+      text: 'Gender'
+    },{
+      dataField: 'seat_number',
+      text: 'Seat No'
+    },
+    {
+      dataField: 'coach_number',
+      text: 'Coach No'
+    },
+    {
+        dataField: 'coach_type',
+        text: 'Coach Type'
+      }
+  ];
   
       const getPassengers = (ticket_id) => {
 
@@ -187,8 +189,8 @@ export default function Trains(){
               obj.passenger_name= response.data.rows[i].passenger_name;
               obj.age= response.data.rows[i].age;
               obj.gender=response.data.rows[i].gender;
-              obj.seat_no=response.data.rows[i].seat_no;
-              obj.coach_no=response.data.rows[i].coach_no;
+              obj.seat_number=response.data.rows[i].seat_number;
+              obj.coach_number=response.data.rows[i].coach_number;
               obj.coach_type=response.data.rows[i].coach_type;
               curr_passengers_list = [...curr_passengers_list,obj]
              }
@@ -207,9 +209,7 @@ export default function Trains(){
       },[]);
   
       return(
-          <div>
-          
-      <p>{passengers}</p>
-    </div>
+        <BootstrapTable keyField='ticket_id' data={passengers} columns={passenger_cols} >
+        </BootstrapTable>
       );
   }
