@@ -6,7 +6,9 @@ const format = require('pg-format');
 
 const acBerthCount = 18;
 const slBerthCount = 24;
-
+const birthType = ['NONE','LB','UB','SL','SU','MB'];
+const acBerthTypes = [0,1,1,2,2,3,4,1,1,2,2,3,4,1,1,2,2,3,4];
+const slBerthTypes = [0,1,5,2,1,5,2,3,4,1,5,2,1,5,2,3,4,1,5,2,1,5,2,3,4];
 
 
 const Ticket = {
@@ -27,8 +29,8 @@ const Ticket = {
     console.log(req.body)
 
 
-    if (!myId || !trainId || !numberOfPassengers || !coachType) {
-      return res.status(400).send({'message': 'Some values are missing'});
+    if (!myId || !trainId || !numberOfPassengers || !coachType || passenger.length != numberOfPassengers) {
+      return res.status(400).send({'message': 'Some values are missing or passenger lenght != number of passengers'});
     }
 
     const checkTrainStatus = `SELECT * FROM train_status WHERE train_id = $1`;
@@ -87,7 +89,10 @@ const Ticket = {
           var passengersArray = [];
           var currPass = 0;
           passenger.forEach(function(item) {
-            const seatAlloted = ((availableSeats-currPass)%coachTotalCount);
+            var seatAlloted = ((availableSeats-currPass)%coachTotalCount);
+            if(seatAlloted == 0){
+              seatAlloted = coachTotalCount;
+            }
             passengersArray.push([
               uuid(),
               createTicketValues[0],
@@ -95,9 +100,9 @@ const Ticket = {
               item.name,
               parseInt(item.age,10),
               item.gender,
-              seatAlloted == 0 ? coachTotalCount : seatAlloted,
+              seatAlloted,
               Math.floor((availableSeats-currPass)/coachTotalCount),
-              updateCoach
+              updateCoach+'/'+birthType[(updateCoach=='ac') ?  acBerthTypes[seatAlloted] : slBerthTypes[seatAlloted]]
             ]);
             currPass = currPass + 1;
           });
@@ -166,11 +171,6 @@ const Ticket = {
       return res.status(400).send(error);
     }
   },
-
-  
-
-
 }
-
 
 module.exports = Ticket;
