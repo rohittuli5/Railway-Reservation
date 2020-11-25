@@ -57,7 +57,7 @@ app.get("/", (req, res) => {
 
 app.post('/api/v1/users/login',UserWithDb.login);  // email , password
 app.post('/api/v1/users/create', UserWithDb.create);  // email , password
-app.post('/api/v1/admin/create_train', Auth.verifyToken, AdminWithDb.createTrain); // different middleware for admins
+app.post('/api/v1/admin/create_train', Auth.verifyTokenAdmin, AdminWithDb.createTrain); // different middleware for admins
 app.get('/api/v1/get_all_train', Auth.verifyToken, AdminWithDb.getAllTrains);
 
 app.get('/api/v1/users/get_all_my_tickets', Auth.verifyToken, Ticket.getAllTickets);
