@@ -185,7 +185,7 @@ export default function Trains(){
               var obj=new Object();
               //obj.train_id= response.data.rows[i].train_id;
               //obj.ticket_id= response.data.rows[i].ticket_id;
-              //obj.passenger_id= response.data.rows[i].id;
+              obj.passenger_id= response.data.rows[i].id;
               obj.passenger_name= response.data.rows[i].passenger_name;
               obj.age= response.data.rows[i].age;
               obj.gender=response.data.rows[i].gender;
@@ -209,7 +209,7 @@ export default function Trains(){
       },[]);
   
       return(
-        <BootstrapTable keyField='ticket_id' data={passengers} columns={passenger_cols} >
+        <BootstrapTable keyField='passenger_id' data={passengers} columns={passenger_cols} >
         </BootstrapTable>
       );
   }
