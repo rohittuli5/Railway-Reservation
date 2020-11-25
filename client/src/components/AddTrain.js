@@ -2,10 +2,23 @@ import  React, { Component, Fragment,useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import DateTimePicker from 'react-datetime-picker';
+import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 const axios = require('axios')
 const qs = require('querystring')
 const moment=require('moment')
 export default function AddTrains(){
+    const location = useLocation();
+    const history = useHistory();
+    if(!location.state){
+      history.push('/sign-in');
+    }
+    var token="";
+    if(location.state){
+    token = location.state.params;
+    }
+    console.log(token);
+    
     const [train_name, setTrainName] = useState("");
     const [sl_coach_count, setSlCoachCount] = useState(0);
     const [ac_coach_count, setAcCoachCount] = useState(0);
@@ -27,7 +40,7 @@ export default function AddTrains(){
         const config = {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
+            'x-access-token': token
           }
         }
         axios.post('https://railway-reservation-project.herokuapp.com/api/v1/admin/create_train', qs.stringify(requestBody), config)
@@ -88,5 +101,5 @@ export default function AddTrains(){
         </Form>
     );
 
-
+    
 }

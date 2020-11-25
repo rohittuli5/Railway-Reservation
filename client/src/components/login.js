@@ -1,6 +1,8 @@
 import React, { Component, Fragment,useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 const axios = require('axios')
 const qs = require('querystring')
 //let output="cfdv"
@@ -8,7 +10,7 @@ const qs = require('querystring')
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
+    const history = useHistory();
     function validateForm() {
         return email.length > 0 && password.length > 0;
       }
@@ -34,13 +36,13 @@ export default function Login() {
             }
             let token=response.data.token;
             let user_type=response.data.user_type;
-            if(user_type=='consumer'){
-              console.log("Logged in as consumer");
-            //   output="Logged in as consumer";
+            if(user_type=='admin'){
+              console.log("Logged in as Admin");
+              history.push('/add-train',{params:token});
             }
             else {
-              console.log("Logged in as admin");
-              // output="Logged in as admin";
+              console.log("Logged in as Ticket Booker");
+              history.push('/trains',{params:token});
             }
             
         
@@ -57,6 +59,24 @@ export default function Login() {
     
     
         return (
+          <div>
+          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+        <div className="container">
+          <Link className="navbar-brand" to={"/sign-in"}>Railway Reservation Project</Link>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link className="nav-link" to={"/sign-in"}>Login</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/sign-up"}>Sign up</Link>
+              </li>
+              
+            
+            </ul>
+          </div>
+        </div>
+      </nav>
             <Form onSubmit={handleSubmit}>
                 <h3>Sign In</h3>
             <Form.Group size="lg" controlId="email">
@@ -80,6 +100,7 @@ export default function Login() {
             Login
             </Button>
             </Form>
+            </div>
         );
     
 }

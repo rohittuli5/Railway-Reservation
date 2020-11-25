@@ -1,6 +1,8 @@
 import React, { Component, Fragment,useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 const axios = require('axios')
 const qs = require('querystring')
 export default function SignUp() {
@@ -9,6 +11,7 @@ export default function SignUp() {
     const [name, setName] = useState("");
     const [card_no, setCardNo] = useState("");
     const [address, setAddress] = useState("");
+    const history = useHistory();
     function validateForm() {
         if(email.length > 0 && password.length > 0 && name.length>0 && card_no.length==16){
             return true;
@@ -36,7 +39,7 @@ export default function SignUp() {
             if(response.status==400){
               console.log("Server Error");
             }
-        
+            history.push('/sign-in');
         })
         .catch(err =>{
           console.log(err);
@@ -46,8 +49,27 @@ export default function SignUp() {
             console.log(err.response.headers);
           }
         })
+        
       }
         return (
+          <div>
+          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+          <div className="container">
+            <Link className="navbar-brand" to={"/sign-in"}>Railway Reservation Project</Link>
+            <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link className="nav-link" to={"/sign-in"}>Login</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to={"/sign-up"}>Sign up</Link>
+                </li>
+                
+              
+              </ul>
+            </div>
+          </div>
+        </nav>
             <Form onSubmit={handleSubmit}>
                 <h3>Sign Up</h3>
 
@@ -104,6 +126,7 @@ export default function SignUp() {
                 Already registered <a href="#">sign in?</a>
             </p>
             </Form>
+            </div>
         );
     
 }

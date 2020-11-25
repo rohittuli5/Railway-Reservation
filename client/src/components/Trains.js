@@ -1,6 +1,9 @@
-import { Button } from "bootstrap";
+import  Button  from "react-bootstrap/Button";
 import  { Component, Fragment,useState } from "react";
 import BootstrapTable from 'react-bootstrap-table-next'
+import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -11,6 +14,16 @@ const qs = require('querystring')
   
 
 export default function Trains(){
+  const location = useLocation();
+    const history = useHistory();
+    if(!location.state){
+      history.push('/sign-in');
+    }
+    var token="";
+    if(location.state){
+    token = location.state.params;
+    }
+    console.log(token);
   const [inputList, setInputList] = useState([{ name: "", age: "",gender:"" }]);
   const[noOfPassengers,setNoOfPassengers]=useState(0);
   const[coach_type,handleCoachChange]=useState("");
@@ -19,7 +32,7 @@ export default function Trains(){
     const config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
+          'x-access-token': token
         }
       }
       const cols = [{
@@ -85,7 +98,7 @@ export default function Trains(){
       console.log(requestBody);
       const config = {
         headers: {
-          'x-access-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkMTBkNTE4NC03MzNlLTRkYjEtYWU4Mi0xYzQ5ODk1YzRmYjIiLCJpYXQiOjE2MDYxNDA4NDMsImV4cCI6MTYwNjc0NTY0M30.gUaiUNS3ZXIJGgVxIHGf-OLNu1U0mSzJtFwi0DJgR3c'
+          'x-access-token':token
         }
       }
 
@@ -133,7 +146,9 @@ export default function Trains(){
     function validateForm(){
       return true;
     }
-
+    function handlePageSwitch(){
+      history.push('/bookings',{params:token});
+    }
     const expandRow = {
       showExpandColumn: true,
       renderer: row => (
@@ -188,6 +203,19 @@ export default function Trains(){
     return(
         <div>
         
+          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+        <div className="container">
+          <Link className="navbar-brand" to={"/sign-in"}>Railway Reservation Project</Link>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Button onClick={handlePageSwitch} className="btn btn-block">Check Bookings</Button>
+              </li>
+            
+            </ul>
+          </div>
+        </div>
+      </nav>
         <BootstrapTable keyField='train_name' data={trains} columns={cols} selectRow={ selectRow }
         expandRow={ expandRow } >
       
