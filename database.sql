@@ -80,3 +80,7 @@ CREATE TABLE IF NOT EXISTS
 -- Select * from tickets;
 -- Select * from trains;
 -- Select * from passengers;
+
+-- SELECT tickets.*, trains.train_name, trains.schedule_date FROM tickets INNER JOIN trains ON trains.id = tickets.train_id where booked_by = 'd10d5184-733e-4db1-ae82-1c49895c4fb2';
+
+-- SELECT trains.* , train_status.ac_seat_count_left , train_status.sl_seat_count_left FROM trains INNER JOIN train_status ON trains.id = train_status.train_id where schedule_date >= NOW();

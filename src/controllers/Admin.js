@@ -60,7 +60,7 @@ const Admin = {
   },
 
   async getAllTrains(req, res) {
-    const findAllQuery = 'SELECT * FROM trains where schedule_date >= NOW()';
+    const findAllQuery = 'SELECT trains.* , train_status.ac_seat_count_left , train_status.sl_seat_count_left FROM trains INNER JOIN train_status ON trains.id = train_status.train_id where schedule_date >= NOW()';
     try {
       const { rows, rowCount } = await db.query(findAllQuery, []);
       return res.status(200).send({ rows, rowCount });
