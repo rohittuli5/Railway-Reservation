@@ -90,7 +90,9 @@ const Ticket = {
           var currPass = 0;
           passenger.forEach(function(item) {
             var seatAlloted = ((availableSeats-currPass)%coachTotalCount);
+            var coachNumber = Math.floor((availableSeats-currPass)/coachTotalCount);
             if(seatAlloted == 0){
+              coachNumber = coachNumber - 1;
               seatAlloted = coachTotalCount;
             }
             passengersArray.push([
@@ -101,7 +103,7 @@ const Ticket = {
               parseInt(item.age,10),
               item.gender,
               seatAlloted,
-              Math.floor((availableSeats-currPass)/coachTotalCount),
+              coachNumber,
               updateCoach+'/'+birthType[(updateCoach=='ac') ?  acBerthTypes[seatAlloted] : slBerthTypes[seatAlloted]]
             ]);
             currPass = currPass + 1;
