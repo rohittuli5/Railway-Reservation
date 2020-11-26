@@ -19,15 +19,9 @@ const User = {
     }
     const hashPassword = Helper.hashPassword(req.body.password);
 
-    const createQueryUser = `INSERT INTO
-      users(id, email, password,user_type,created_date, modified_date)
-      VALUES($1, $2, $3, $4, $5, $6)
-      returning *`;
+    const createQueryUser = `INSERT INTO users(id, email, password,user_type,created_date, modified_date) VALUES($1, $2, $3, $4, $5, $6) returning *`;
 
-    const createQueryAgent = `INSERT INTO
-      booking_agents(id, credit_card, address, created_date)
-      VALUES($1, $2, $3, $4)
-      returning *`;
+    const createQueryAgent = `INSERT INTO booking_agents(id, credit_card, address, created_date) VALUES($1, $2, $3, $4) returning *`;
 
     const values = [
       uuid(),
