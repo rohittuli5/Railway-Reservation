@@ -197,7 +197,7 @@ export default function Trains(){
       renderer: row => (
         <div className="Booking">
       <h3>Book Ticket for train {row.train_name}</h3>
-      <select name="coach" id="coach" onChange={e=>handleCoachChange(e)}>
+      <select name="coach" id="coach" onChange={e=>handleCoachChange(e.target.value)}>
       <option value="ac">Select Coach</option>      
       <option value="ac">AC Coach</option>
       <option value="sl">Sleeper Coach</option>
